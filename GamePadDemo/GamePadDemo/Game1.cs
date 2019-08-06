@@ -21,6 +21,9 @@ namespace GamePadDemo
 		public string dPadDirection { get; set; }
 		public string LeftStick { get; set; }
 		public string RightStick { get; set; }
+		public string LeftTrigger { get; set; }
+		public string RIghtTrigger { get; set; }
+
 	}
 
 	public class Game1 : Game
@@ -60,6 +63,10 @@ namespace GamePadDemo
 				Exit();
 
 
+			// Try something simpler:
+			if (GamePad.GetState(PlayerIndex.One).IsConnected)
+				Console.WriteLine("Connected!");
+
 			// Read the gamepad.
 			var gpstate = GamePad.GetState(PlayerIndex.One);
 
@@ -81,6 +88,8 @@ namespace GamePadDemo
 			});
 			flags.LeftStick = string.Concat("(", gpstate.ThumbSticks.Left.X.ToString(), ", ", gpstate.ThumbSticks.Left.Y.ToString(), ")");
 			flags.RightStick = string.Concat("(", gpstate.ThumbSticks.Right.X.ToString(), ", ", gpstate.ThumbSticks.Right.Y.ToString(), ")");
+			flags.LeftTrigger = gpstate.Triggers.Left.ToString();
+			flags.RIghtTrigger = gpstate.Triggers.Right.ToString();
 			base.Update(gameTime);
 		}
 
@@ -89,7 +98,7 @@ namespace GamePadDemo
 			GraphicsDevice.Clear(Color.DarkBlue);
 
 			int rowNum = 0;
-			int rowHeight = 30;
+			int rowHeight = 25;
 			var textColor = Color.White;
 			float rotation = 0.0f;
 			float scale = 0.25f;
@@ -107,7 +116,9 @@ namespace GamePadDemo
 				flags.ShowLeftStickButton,
 				flags.ShowRightStickButton,
 				flags.LeftStick,
-				flags.RightStick
+				flags.RightStick,
+				flags.LeftTrigger,
+				flags.RIghtTrigger
 			}.ForEach(s => spriteBatch.DrawString(font, s, new Vector2(10, rowNum++ * rowHeight), textColor, rotation, Vector2.Zero, scale, SpriteEffects.None, 0f));
 			spriteBatch.End();
 
