@@ -24,7 +24,8 @@ namespace SetScreenResolution
 			Content.RootDirectory = "Content";
 		}
 
-		protected override void Initialize()
+
+		protected void ConfigureScreen(bool fullScreen)
 		{
 			// Pick a screen size here.
 			screenSize = screenSize800x600;
@@ -33,12 +34,19 @@ namespace SetScreenResolution
 			graphics.PreferredBackBufferWidth = screenSize.width;
 			graphics.PreferredBackBufferHeight = screenSize.height;
 
-			// If this is windowed, it seems any screen resolution is allowed.
-			// If it is full screen, you will want to make sure it's a supported resolution.
-			if (GraphicsAdapter.DefaultAdapter.SupportedDisplayModes.Any(mode => (mode.Width == screenSize.width) && (mode.Height == screenSize.height)))
-				graphics.IsFullScreen = true;
+			// If we are windowed, it seems any resolution is allowed.  It just resizes the window.
+			// If we go full screen, you will want to make sure it's a supported resolution for the screen.
+			if (fullScreen)
+				if (GraphicsAdapter.DefaultAdapter.SupportedDisplayModes.Any(mode => (mode.Width == screenSize.width) && (mode.Height == screenSize.height)))
+					graphics.IsFullScreen = true;
 
 			graphics.ApplyChanges();
+		}
+
+		protected override void Initialize()
+		{
+			// With this commented out, you can see the default screen size.  it's wacky.
+			//ConfigureScreen(false);
 
 			// Determine actual screen resolution and output it.
 			(int w, int h) screenMode = (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
